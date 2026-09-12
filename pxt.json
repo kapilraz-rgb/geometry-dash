@@ -1,5 +1,6 @@
 {
     "name": "GEOMETRY DASH",
+    "version": "1.0.0",
     "description": "GD",
     "dependencies": {
         "device": "*",
