@@ -6,6 +6,7 @@ enum ActionKind {
 namespace SpriteKind {
     export const p2 = SpriteKind.create()
     export const checkpoint = SpriteKind.create()
+    export const Wall = SpriteKind.create()
 }
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile1`, function (sprite, location) {
     if (EDITOR == 0) {
@@ -15,17 +16,26 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile1`, function (sprite, l
 })
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     if (EDITOR == 0) {
-        animation.stopAnimation(animation.AnimationTypes.All, mySprite)
-        mySprite.setImage(assets.image`myImage`)
-        controller.moveSprite(mySprite)
-        mySprite.ay = 0
-        mySprite.setVelocity(0, 0)
+        animation.stopAnimation(animation.AnimationTypes.All, Cube)
+        Cube.setImage(img`
+            1 1 1 1 1 1 1 1 
+            1 f f f f f f 1 
+            1 f f f f f f 1 
+            1 f f f f f f 1 
+            1 f f f f f f 1 
+            1 f f f f f f 1 
+            1 f f f f f f 1 
+            1 1 1 1 1 1 1 1 
+            `)
+        controller.moveSprite(Cube)
+        Cube.ay = 0
+        Cube.setVelocity(0, 0)
         EDITOR = 1
         tiles.setCurrentTilemap(tilemap`level2`)
         music.stopAllSounds()
         music.play(music.createSong(hex`0078000408020300001c00010a006400f401640000040000000000000000000000000005000004240000000400011d08000c00012010001400012718001c00012720002400012028002c00011d07001c00020a006400f401640000040000000000000000000000000000000003070030003400021b2909010e02026400000403780000040a000301000000640001c80000040100000000640001640000040100000000fa0004af00000401c80000040a00019600000414000501006400140005010000002c0104dc00000401fa0000040a0001c8000004140005d0076400140005d0070000c800029001f40105c201f4010a0005900114001400039001000005c201f4010500058403050032000584030000fa00049001000005c201f4010500058403c80032000584030500640005840300009001049001000005c201f4010500058403c80064000584030500c8000584030000f40105ac0d000404a00f00000a0004ac0d2003010004a00f0000280004ac0d9001010004a00f0000280002d00700040408070f0064000408070000c80003c800c8000e7d00c80019000e64000f0032000e78000000fa00032c01c8000ee100c80019000ec8000f0032000edc000000fa0003f401c8000ea901c80019000e90010f0032000ea4010000fa0001c8000004014b000000c800012c01000401c8000000c8000190010004012c010000c80002c800000404c8000f0064000496000000c80002c2010004045e010f006400042c010000640002c409000404c4096400960004f6090000f40102b80b000404b80b64002c0104f40b0000f401022003000004200300040a000420030000ea01029001000004900100040a000490010000900102d007000410d0076400960010d0070000c8002a00000001000105080009000105100011000105180019000105200021000105280029000105300031000105`), music.PlaybackMode.LoopingInBackground)
-        scene.cameraFollowSprite(mySprite)
-        game.splash("A to insert B to change. If tile is wall stand left to wall to delete", "Use menu to save")
+        scene.cameraFollowSprite(Cube)
+        game.splash("A to insert B to change", "Use menu to save")
     }
 })
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
@@ -50,7 +60,7 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
             . . . 7 7 7 . . . 
             . . . . 7 . . . . 
             `, SpriteKind.checkpoint)
-        Checkpoints.setPosition(mySprite.x, mySprite.y)
+        Checkpoints.setPosition(Cube.x, Cube.y)
         Practice_mode = 6
         music.stopAllSounds()
         music.play(music.stringPlayable("C D C D C D C D ", 120), music.PlaybackMode.LoopingInBackground)
@@ -59,12 +69,12 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
         game.setGameOverEffect(true, effects.dissolve)
         game.setGameOverPlayable(true, music.stringPlayable("G B A C G A B C5 ", 500), false)
     } else {
-        if (TILE_VAL == 31) {
+        if (TILE_VAL == 32) {
             TILE_VAL = 0
         } else {
             TILE_VAL += 1
         }
-        mySprite.setImage(Tiles[TILE_VAL])
+        Cube.setImage(Tiles[TILE_VAL])
     }
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile`, function (sprite, location) {
@@ -72,20 +82,20 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile`, function (sprite, lo
         if (Practice_mode == 0) {
             music.stopAllSounds()
             game.gameOver(false)
-            sprites.destroy(mySprite)
+            sprites.destroy(Cube)
         } else {
-            mySprite.setPosition(Checkpoints.x, Checkpoints.y)
+            Cube.setPosition(Checkpoints.x, Checkpoints.y)
             game.splash("Retry")
         }
     }
 })
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (EDITOR == 0) {
-        if (mySprite.ay == 500) {
-            if (mySprite.isHittingTile(CollisionDirection.Bottom)) {
-                mySprite.vy = -200
+        if (Cube.ay == 500) {
+            if (Cube.isHittingTile(CollisionDirection.Bottom)) {
+                Cube.vy = -200
                 animation.runImageAnimation(
-                mySprite,
+                Cube,
                 [img`
                     f f f f f f f f f f f f f f f f 
                     f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
@@ -138,13 +148,13 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
                     f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
                     f f f f f f f f f f f f f f f f 
                     `],
-                200,
+                100,
                 true
                 )
             }
-            if (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile8`)) {
+            if (Cube.tileKindAt(TileDirection.Center, assets.tile`myTile8`)) {
                 animation.runImageAnimation(
-                mySprite,
+                Cube,
                 [img`
                     f f f f f f f f f f f f f f f f 
                     f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
@@ -197,15 +207,15 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
                     f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
                     f f f f f f f f f f f f f f f f 
                     `],
-                200,
+                100,
                 true
                 )
-                mySprite.vy = -200
+                Cube.vy = -200
             }
         } else {
-            if (mySprite.isHittingTile(CollisionDirection.Top)) {
+            if (Cube.isHittingTile(CollisionDirection.Top)) {
                 animation.runImageAnimation(
-                mySprite,
+                Cube,
                 [img`
                     f f f f f f f f f f f f f f f f 
                     f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
@@ -258,15 +268,15 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
                     f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
                     f f f f f f f f f f f f f f f f 
                     `],
-                200,
+                100,
                 true
                 )
-                mySprite.vy = 200
+                Cube.vy = 200
             }
-            if (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile8`)) {
-                mySprite.vy = 200
+            if (Cube.tileKindAt(TileDirection.Center, assets.tile`myTile8`)) {
+                Cube.vy = 200
                 animation.runImageAnimation(
-                mySprite,
+                Cube,
                 [img`
                     f f f f f f f f f f f f f f f f 
                     f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
@@ -319,85 +329,94 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
                     f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
                     f f f f f f f f f f f f f f f f 
                     `],
-                200,
+                100,
                 true
                 )
             }
         }
     } else {
         if (TILE_VAL == 0) {
-            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`myTile0`)
+            tiles.setTileAt(Cube.tilemapLocation(), assets.tile`myTile0`)
         } else if (TILE_VAL == 1) {
-            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`myTile`)
+            tiles.setTileAt(Cube.tilemapLocation(), assets.tile`myTile`)
         } else if (TILE_VAL == 2) {
-            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`myTile26`)
+            tiles.setTileAt(Cube.tilemapLocation(), assets.tile`myTile26`)
         } else if (TILE_VAL == 3) {
-            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`myTile10`)
+            tiles.setTileAt(Cube.tilemapLocation(), assets.tile`myTile10`)
         } else if (TILE_VAL == 4) {
-            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`myTile9`)
+            tiles.setTileAt(Cube.tilemapLocation(), assets.tile`myTile9`)
         } else if (TILE_VAL == 5) {
-            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`myTile4`)
+            tiles.setTileAt(Cube.tilemapLocation(), assets.tile`myTile4`)
         } else if (TILE_VAL == 6) {
-            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`myTile3`)
+            tiles.setTileAt(Cube.tilemapLocation(), assets.tile`myTile3`)
         } else if (TILE_VAL == 7) {
-            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`myTile8`)
+            tiles.setTileAt(Cube.tilemapLocation(), assets.tile`myTile8`)
         } else if (TILE_VAL == 8) {
-            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`myTile6`)
+            tiles.setTileAt(Cube.tilemapLocation(), assets.tile`myTile6`)
         } else if (TILE_VAL == 9) {
-            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`myTile7`)
+            tiles.setTileAt(Cube.tilemapLocation(), assets.tile`myTile7`)
         } else if (TILE_VAL == 10) {
-            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`Yellow Portal0`)
+            tiles.setTileAt(Cube.tilemapLocation(), assets.tile`Yellow Portal0`)
         } else if (TILE_VAL == 11) {
-            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`myTile27`)
+            tiles.setTileAt(Cube.tilemapLocation(), assets.tile`myTile27`)
         } else if (TILE_VAL == 12) {
-            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`Yellow Portal`)
+            tiles.setTileAt(Cube.tilemapLocation(), assets.tile`Yellow Portal`)
         } else if (TILE_VAL == 13) {
-            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`myTile1`)
+            tiles.setTileAt(Cube.tilemapLocation(), assets.tile`myTile1`)
         } else if (TILE_VAL == 14) {
-            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`myTile5`)
+            tiles.setTileAt(Cube.tilemapLocation(), assets.tile`myTile5`)
         } else if (TILE_VAL == 15) {
-            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`myTile2`)
+            tiles.setTileAt(Cube.tilemapLocation(), assets.tile`myTile2`)
         } else if (TILE_VAL == 16) {
-            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`myTile12`)
+            tiles.setTileAt(Cube.tilemapLocation(), assets.tile`myTile12`)
         } else if (TILE_VAL == 17) {
-            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`myTile13`)
+            tiles.setTileAt(Cube.tilemapLocation(), assets.tile`myTile13`)
         } else if (TILE_VAL == 18) {
-            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`myTile14`)
+            tiles.setTileAt(Cube.tilemapLocation(), assets.tile`myTile14`)
         } else if (TILE_VAL == 19) {
-            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`myTile15`)
+            tiles.setTileAt(Cube.tilemapLocation(), assets.tile`myTile15`)
         } else if (TILE_VAL == 20) {
-            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`myTile17`)
+            tiles.setTileAt(Cube.tilemapLocation(), assets.tile`myTile17`)
         } else if (TILE_VAL == 21) {
-            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`myTile16`)
+            tiles.setTileAt(Cube.tilemapLocation(), assets.tile`myTile16`)
         } else if (TILE_VAL == 22) {
-            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`myTile18`)
+            tiles.setTileAt(Cube.tilemapLocation(), assets.tile`myTile18`)
         } else if (TILE_VAL == 23) {
-            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`myTile19`)
+            tiles.setTileAt(Cube.tilemapLocation(), assets.tile`myTile19`)
         } else if (TILE_VAL == 24) {
-            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`myTile11`)
+            tiles.setTileAt(Cube.tilemapLocation(), assets.tile`myTile11`)
         } else if (TILE_VAL == 25) {
-            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`myTile20`)
+            tiles.setTileAt(Cube.tilemapLocation(), assets.tile`myTile20`)
         } else if (TILE_VAL == 26) {
-            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`myTile22`)
+            tiles.setTileAt(Cube.tilemapLocation(), assets.tile`myTile22`)
         } else if (TILE_VAL == 27) {
-            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`myTile23`)
+            tiles.setTileAt(Cube.tilemapLocation(), assets.tile`myTile23`)
         } else if (TILE_VAL == 28) {
-            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`myTile24`)
+            tiles.setTileAt(Cube.tilemapLocation(), assets.tile`myTile24`)
         } else if (TILE_VAL == 29) {
-            tiles.setWallAt(mySprite.tilemapLocation(), true)
+            wall_added = 1
+            mySprite2 = sprites.create(img`
+                2 2 2 2 2 2 2 2 
+                2 2 2 2 2 2 2 2 
+                2 2 2 2 2 2 2 2 
+                2 2 2 2 2 2 2 2 
+                2 2 2 2 2 2 2 2 
+                2 2 2 2 2 2 2 2 
+                2 2 2 2 2 2 2 2 
+                2 2 2 2 2 2 2 2 
+                `, SpriteKind.Wall)
+            mySprite2.setPosition(Cube.x, Cube.y)
         } else if (TILE_VAL == 30) {
-            if (mySprite.isHittingTile(CollisionDirection.Right)) {
-                tiles.setTileAt(tiles.getTileLocation(location.column + 1, location.row), assets.tile`transparency16`)
-                tiles.setWallAt(tiles.getTileLocation(location.column + 1, location.row), false)
-            } else {
-                tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`transparency16`)
-            }
+            tiles.setTileAt(Cube.tilemapLocation(), assets.tile`transparency16`)
+        } else if (TILE_VAL == 31) {
+            sprites.destroyAllSpritesOfKind(SpriteKind.Wall)
+            wall_added = 0
         }
     }
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile7`, function (sprite, location) {
     if (EDITOR == 0) {
-        mySprite.ay = 500
+        Cube.ay = 500
     }
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile9`, function (sprite, location) {
@@ -405,18 +424,18 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile9`, function (sprite, l
         if (Practice_mode == 0) {
             music.stopAllSounds()
             game.gameOver(false)
-            sprites.destroy(mySprite)
+            sprites.destroy(Cube)
         } else {
-            mySprite.setPosition(Checkpoints.x, Checkpoints.y)
+            Cube.setPosition(Checkpoints.x, Checkpoints.y)
             game.splash("Retry")
         }
     }
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile3`, function (sprite, location) {
     if (EDITOR == 0) {
-        mySprite.vy = -200
+        Cube.vy = -200
         animation.runImageAnimation(
-        mySprite,
+        Cube,
         [img`
             f f f f f f f f f f f f f f f f 
             f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
@@ -491,7 +510,25 @@ controller.menu.onEvent(ControllerButtonEvent.Pressed, function () {
     }
 })
 function start_saved () {
-    sprites.destroy(mySprite)
+    tiles.placeOnTile(Cube, tiles.getTileLocation(0, 0))
+    Cube.setImage(img`
+        f f f f f f f f f f f f f f f f 
+        f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+        f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+        f 5 f f f f 5 5 5 f f f f 5 5 f 
+        f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
+        f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
+        f 5 f f f f 5 5 5 f f f f 5 5 f 
+        f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+        f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+        f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+        f 5 f f f f f f f f f f f 5 5 f 
+        f 5 f 9 9 9 9 9 9 9 9 9 f 5 5 f 
+        f 5 f 9 9 9 9 9 9 9 9 9 f 5 5 f 
+        f 5 f f f f f f f f f f f 5 5 f 
+        f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+        f f f f f f f f f f f f f f f f 
+        `)
     music.stopAllSounds()
     myTilemap = 0
     game.setGameOverPlayable(true, music.stringPlayable("C5 B A G C A B G ", 500), false)
@@ -620,58 +657,46 @@ function start_saved () {
         8888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888
         8888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888
         `)
-    mySprite = sprites.create(img`
-        f f f f f f f f f f f f f f f f 
-        f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-        f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-        f 5 f f f f 5 5 5 f f f f 5 5 f 
-        f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
-        f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
-        f 5 f f f f 5 5 5 f f f f 5 5 f 
-        f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-        f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-        f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-        f 5 f f f f f f f f f f f 5 5 f 
-        f 5 f 9 9 9 9 9 9 9 9 9 f 5 5 f 
-        f 5 f 9 9 9 9 9 9 9 9 9 f 5 5 f 
-        f 5 f f f f f f f f f f f 5 5 f 
-        f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-        f f f f f f f f f f f f f f f f 
-        `, SpriteKind.Player)
     music.play(music.stringPlayable("C5 F - - - - - - ", 437), music.PlaybackMode.UntilDone)
     music.play(music.stringPlayable("C5 B F A F B F E ", 120), music.PlaybackMode.LoopingInBackground)
     music.play(music.stringPlayable("C D E D C D E D ", 120), music.PlaybackMode.LoopingInBackground)
     game.setGameOverEffect(false, effects.dissolve)
     game.setGameOverMessage(false, "YOU DIED")
     game.setGameOverPlayable(false, music.stringPlayable("C5 A B G A F G E ", 407), false)
-    mySprite.vx = 90
-    mySprite.ay = 500
+    Cube.vx = 90
+    Cube.ay = 500
+    BLOCK_LOCATION = tiles.getTilesByType(assets.tile`myTile0`)
+    tileScanner.setWallAtLocations(BLOCK_LOCATION, true)
+    if (wall_added == 1) {
+        tiles.setWallAt(mySprite2.tilemapLocation(), true)
+        sprites.destroyAllSpritesOfKind(SpriteKind.Wall)
+    }
 }
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile10`, function (sprite, location) {
     if (EDITOR == 0) {
         if (Practice_mode == 0) {
             music.stopAllSounds()
             game.gameOver(false)
-            sprites.destroy(mySprite)
+            sprites.destroy(Cube)
         } else {
-            mySprite.setPosition(Checkpoints.x, Checkpoints.y)
+            Cube.setPosition(Checkpoints.x, Checkpoints.y)
             game.splash("Retry")
         }
     }
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile27`, function (sprite, location) {
     if (EDITOR == 0) {
-        mySprite.ay = -500
+        Cube.ay = -500
     }
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`Yellow Portal0`, function (sprite, location) {
     if (EDITOR == 0) {
-        mySprite.ay = 500
+        Cube.ay = 500
     }
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`Yellow Portal`, function (sprite, location) {
     if (EDITOR == 0) {
-        mySprite.ay = -500
+        Cube.ay = -500
     }
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile26`, function (sprite, location) {
@@ -679,19 +704,21 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile26`, function (sprite, 
         if (Practice_mode == 0) {
             music.stopAllSounds()
             game.gameOver(false)
-            sprites.destroy(mySprite)
+            sprites.destroy(Cube)
         } else {
-            mySprite.setPosition(Checkpoints.x, Checkpoints.y)
+            Cube.setPosition(Checkpoints.x, Checkpoints.y)
             game.splash("Retry")
         }
     }
 })
-let BLOCK_LOCATION: tiles.Location[] = []
 let location: tiles.Location = null
+let BLOCK_LOCATION: tiles.Location[] = []
+let mySprite2: Sprite = null
+let wall_added = 0
 let Tiles: Image[] = []
 let TILE_VAL = 0
 let Checkpoints: Sprite = null
-let mySprite: Sprite = null
+let Cube: Sprite = null
 let Practice_mode = 0
 let myTilemap = 0
 let EDITOR = 0
@@ -823,7 +850,7 @@ scene.setBackgroundImage(img`
     8888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888
     8888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888
     `)
-mySprite = sprites.create(img`
+Cube = sprites.create(img`
     f f f f f f f f f f f f f f f f 
     f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
     f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
@@ -848,86 +875,378 @@ music.play(music.stringPlayable("C D E D C D E D ", 120), music.PlaybackMode.Loo
 game.setGameOverEffect(false, effects.dissolve)
 game.setGameOverMessage(false, "YOU DIED")
 game.setGameOverPlayable(false, music.stringPlayable("C5 A B G A F G E ", 407), false)
-mySprite.vx = 90
-mySprite.ay = 500
+Cube.vx = 90
+Cube.ay = 500
 game.onUpdate(function () {
     Tiles = [
-    assets.image`myImage`,
-    assets.image`myImage0`,
-    assets.image`myImage11`,
-    assets.image`myImage12`,
-    assets.image`myImage13`,
-    assets.image`myImage1`,
-    assets.image`myImage2`,
-    assets.image`myImage3`,
-    assets.image`myImage4`,
-    assets.image`myImage5`,
-    assets.image`myImage14`,
-    assets.image`myImage6`,
-    assets.image`myImage15`,
-    assets.image`myImage7`,
-    assets.image`myImage8`,
-    assets.image`myImage16`,
-    assets.image`myImage17`,
-    assets.image`myImage18`,
-    assets.image`myImage19`,
-    assets.image`myImage20`,
-    assets.image`myImage21`,
-    assets.image`myImage22`,
-    assets.image`myImage23`,
-    assets.image`myImage24`,
-    assets.image`myImage25`,
-    assets.image`myImage29`,
-    assets.image`myImage26`,
-    assets.image`myImage27`,
-    assets.image`myImage28`,
-    assets.image`myImage9`,
-    assets.image`myImage10`
+    img`
+        1 1 1 1 1 1 1 1 
+        1 f f f f f f 1 
+        1 f f f f f f 1 
+        1 f f f f f f 1 
+        1 f f f f f f 1 
+        1 f f f f f f 1 
+        1 f f f f f f 1 
+        1 1 1 1 1 1 1 1 
+        `,
+    img`
+        . . . . f . . . 
+        . . . f f . . . 
+        . . . f f f . . 
+        . . f f f f . . 
+        . f f f f f . . 
+        . f f f f f f . 
+        f f f f f f f . 
+        f f f f f f f f 
+        `,
+    img`
+        f f . . . . . . 
+        f f f f . . . . 
+        f f f f f . . . 
+        f f f f f f f . 
+        f f f f f f f f 
+        f f f f f f . . 
+        f f f . . . . . 
+        f . . . . . . . 
+        `,
+    img`
+        f f f f f f f f 
+        . f f f f f f f 
+        . f f f f f f . 
+        . . f f f f f . 
+        . . f f f f . . 
+        . . f f f . . . 
+        . . . f f . . . 
+        . . . f . . . . 
+        `,
+    img`
+        . . . . . . . f 
+        . . . . . f f f 
+        . . f f f f f f 
+        f f f f f f f f 
+        . f f f f f f f 
+        . . . f f f f f 
+        . . . . f f f f 
+        . . . . . . f f 
+        `,
+    img`
+        . . . f f . . . 
+        . . f 1 1 f . . 
+        . . f 1 1 f . . 
+        . . . f f . . . 
+        . . . f f . . . 
+        . . . f f . . . 
+        . . . f f . . . 
+        f f f f f f f f 
+        `,
+    img`
+        . . . . . . . . 
+        5 . . . 5 . . 1 
+        5 . 1 . 5 . . 1 
+        5 . 1 . . . . 1 
+        . . . . . . . . 
+        . 5 5 5 5 5 5 . 
+        5 5 5 5 5 5 5 5 
+        5 5 5 5 5 5 5 5 
+        `,
+    img`
+        . f f f f f f . 
+        f . . . . . . f 
+        f . . f f . . f 
+        f . f 5 5 f . f 
+        f . f 5 5 f . f 
+        f . . f f . . f 
+        f . . . . . . f 
+        . f f f f f f . 
+        `,
+    img`
+        . . f f f . . . 
+        . . . f f f . . 
+        . . f f f . . . 
+        . . . f f f . . 
+        . . f f f . . . 
+        . . . f f f . . 
+        . . . f f . . . 
+        f f f f f f f f 
+        `,
+    img`
+        . . f f f f . . 
+        . f 9 9 9 9 f . 
+        f 9 f f f f 9 f 
+        f 9 f . . f 9 f 
+        f 9 f . . f 9 f 
+        f 9 f . . f 9 f 
+        f 9 f . . f 9 f 
+        f 9 f . . f 9 f 
+        `,
+    img`
+        f 9 f . . f 9 f 
+        f 9 f . . f 9 f 
+        f 9 f . . f 9 f 
+        f 9 f . . f 9 f 
+        f 9 f . . f 9 f 
+        f 9 f f f f 9 f 
+        . f 9 9 9 9 f . 
+        . . f f f f . . 
+        `,
+    img`
+        . . f f f f . . 
+        . f 5 5 5 5 f . 
+        f 5 f f f f 5 f 
+        f 5 f . . f 5 f 
+        f 5 f . . f 5 f 
+        f 5 f . . f 5 f 
+        f 5 f . . f 5 f 
+        f 5 f . . f 5 f 
+        `,
+    img`
+        f 5 f . . f 5 f 
+        f 5 f . . f 5 f 
+        f 5 f . . f 5 f 
+        f 5 f . . f 5 f 
+        f 5 f . . f 5 f 
+        f 5 f f f f 5 f 
+        . f 5 5 5 5 f . 
+        . . f f f f . . 
+        `,
+    img`
+        . . . . . . 1 1 
+        . 1 1 1 1 . 1 1 
+        . . . . . . 1 1 
+        . . . 1 1 . 1 1 
+        . . . . . . 1 1 
+        1 1 1 . . . 1 1 
+        . . . . . . 1 1 
+        . 1 1 1 . . 1 1 
+        `,
+    img`
+        1 1 1 1 1 1 1 1 
+        1 1 1 1 1 1 1 1 
+        1 1 1 1 1 1 1 1 
+        1 1 1 1 1 1 1 1 
+        1 1 1 1 1 1 1 1 
+        1 1 1 1 1 1 1 1 
+        1 1 1 1 1 1 1 1 
+        1 1 1 1 1 1 1 1 
+        `,
+    img`
+        2 2 2 2 2 2 2 2 
+        2 2 2 2 2 2 2 2 
+        2 2 2 2 2 2 2 2 
+        2 2 2 2 2 2 2 2 
+        2 2 2 2 2 2 2 2 
+        2 2 2 2 2 2 2 2 
+        2 2 2 2 2 2 2 2 
+        2 2 2 2 2 2 2 2 
+        `,
+    img`
+        4 4 4 4 4 4 4 4 
+        4 4 4 4 4 4 4 4 
+        4 4 4 4 4 4 4 4 
+        4 4 4 4 4 4 4 4 
+        4 4 4 4 4 4 4 4 
+        4 4 4 4 4 4 4 4 
+        4 4 4 4 4 4 4 4 
+        4 4 4 4 4 4 4 4 
+        `,
+    img`
+        5 5 5 5 5 5 5 5 
+        5 5 5 5 5 5 5 5 
+        5 5 5 5 5 5 5 5 
+        5 5 5 5 5 5 5 5 
+        5 5 5 5 5 5 5 5 
+        5 5 5 5 5 5 5 5 
+        5 5 5 5 5 5 5 5 
+        5 5 5 5 5 5 5 5 
+        `,
+    img`
+        7 7 7 7 7 7 7 7 
+        7 7 7 7 7 7 7 7 
+        7 7 7 7 7 7 7 7 
+        7 7 7 7 7 7 7 7 
+        7 7 7 7 7 7 7 7 
+        7 7 7 7 7 7 7 7 
+        7 7 7 7 7 7 7 7 
+        7 7 7 7 7 7 7 7 
+        `,
+    img`
+        6 6 6 6 6 6 6 6 
+        6 6 6 6 6 6 6 6 
+        6 6 6 6 6 6 6 6 
+        6 6 6 6 6 6 6 6 
+        6 6 6 6 6 6 6 6 
+        6 6 6 6 6 6 6 6 
+        6 6 6 6 6 6 6 6 
+        6 6 6 6 6 6 6 6 
+        `,
+    img`
+        9 9 9 9 9 9 9 9 
+        9 9 9 9 9 9 9 9 
+        9 9 9 9 9 9 9 9 
+        9 9 9 9 9 9 9 9 
+        9 9 9 9 9 9 9 9 
+        9 9 9 9 9 9 9 9 
+        9 9 9 9 9 9 9 9 
+        9 9 9 9 9 9 9 9 
+        `,
+    img`
+        8 8 8 8 8 8 8 8 
+        8 8 8 8 8 8 8 8 
+        8 8 8 8 8 8 8 8 
+        8 8 8 8 8 8 8 8 
+        8 8 8 8 8 8 8 8 
+        8 8 8 8 8 8 8 8 
+        8 8 8 8 8 8 8 8 
+        8 8 8 8 8 8 8 8 
+        `,
+    img`
+        a a a a a a a a 
+        a a a a a a a a 
+        a a a a a a a a 
+        a a a a a a a a 
+        a a a a a a a a 
+        a a a a a a a a 
+        a a a a a a a a 
+        a a a a a a a a 
+        `,
+    img`
+        b b b b b b b b 
+        b b b b b b b b 
+        b b b b b b b b 
+        b b b b b b b b 
+        b b b b b b b b 
+        b b b b b b b b 
+        b b b b b b b b 
+        b b b b b b b b 
+        `,
+    img`
+        c c c c c c c c 
+        c c c c c c c c 
+        c c c c c c c c 
+        c c c c c c c c 
+        c c c c c c c c 
+        c c c c c c c c 
+        c c c c c c c c 
+        c c c c c c c c 
+        `,
+    img`
+        3 3 3 3 3 3 3 3 
+        3 3 3 3 3 3 3 3 
+        3 3 3 3 3 3 3 3 
+        3 3 3 3 3 3 3 3 
+        3 3 3 3 3 3 3 3 
+        3 3 3 3 3 3 3 3 
+        3 3 3 3 3 3 3 3 
+        3 3 3 3 3 3 3 3 
+        `,
+    img`
+        d d d d d d d d 
+        d d d d d d d d 
+        d d d d d d d d 
+        d d d d d d d d 
+        d d d d d d d d 
+        d d d d d d d d 
+        d d d d d d d d 
+        d d d d d d d d 
+        `,
+    img`
+        e e e e e e e e 
+        e e e e e e e e 
+        e e e e e e e e 
+        e e e e e e e e 
+        e e e e e e e e 
+        e e e e e e e e 
+        e e e e e e e e 
+        e e e e e e e e 
+        `,
+    img`
+        f f f f f f f f 
+        f f f f f f f f 
+        f f f f f f f f 
+        f f f f f f f f 
+        f f f f f f f f 
+        f f f f f f f f 
+        f f f f f f f f 
+        f f f f f f f f 
+        `,
+    img`
+        e 4 e e e 4 e e 
+        e 4 e e e 4 e e 
+        4 4 4 4 4 4 4 4 
+        e e e 4 e e e 4 
+        e e e 4 e e e 4 
+        4 4 4 4 4 4 4 4 
+        e 4 e e e 4 e e 
+        e 4 e e e 4 e e 
+        `,
+    img`
+        . . 3 . . . . . 
+        . 3 3 8 . . . . 
+        3 3 1 8 8 . . . 
+        . 8 1 1 1 8 . . 
+        . . 8 8 1 8 8 . 
+        . . . 8 1 1 1 8 
+        . . . . 8 8 8 . 
+        . . . . . 8 . . 
+        `,
+    img`
+        . . 3 . . . . . 
+        . 3 3 8 . . . . 
+        3 3 1 8 8 . . . 
+        . 8 1 1 1 8 . . 
+        . . 8 8 4 4 4 4 
+        . . . 8 e 4 e 4 
+        . . . . 4 4 4 4 
+        . . . . 4 e 4 e 
+        `
     ]
-    BLOCK_LOCATION = tiles.getTilesByType(assets.tile`myTile0`)
-    tileScanner.setWallAtLocations(BLOCK_LOCATION, true)
 })
 game.onUpdate(function () {
     if (EDITOR == 0) {
-        scene.centerCameraAt(mySprite.x + 40, mySprite.y)
+        Cube.vx = 90
+    }
+})
+game.onUpdate(function () {
+    if (EDITOR == 0) {
+        scene.centerCameraAt(Cube.x + 40, Cube.y)
     }
 })
 game.onUpdate(function () {
     if (EDITOR == 1) {
-        location = mySprite.tilemapLocation()
+        location = Cube.tilemapLocation()
     }
 })
 forever(function () {
     if (EDITOR == 0) {
-        if (mySprite.isHittingTile(CollisionDirection.Right)) {
+        if (Cube.isHittingTile(CollisionDirection.Right)) {
             if (Practice_mode == 0) {
                 music.stopAllSounds()
                 game.gameOver(false)
-                sprites.destroy(mySprite)
+                sprites.destroy(Cube)
             } else {
-                mySprite.setPosition(Checkpoints.x, Checkpoints.y)
+                Cube.setPosition(Checkpoints.x, Checkpoints.y)
                 game.splash("Retry")
             }
         }
-        if (mySprite.isHittingTile(CollisionDirection.Top)) {
-            if (mySprite.ay == 500) {
+        if (Cube.isHittingTile(CollisionDirection.Top)) {
+            if (Cube.ay == 500) {
                 if (Practice_mode == 0) {
                     music.stopAllSounds()
                     game.gameOver(false)
-                    sprites.destroy(mySprite)
+                    sprites.destroy(Cube)
                 } else {
-                    mySprite.setPosition(Checkpoints.x, Checkpoints.y)
+                    Cube.setPosition(Checkpoints.x, Checkpoints.y)
                     game.splash("Retry")
                 }
             }
         }
-        if (mySprite.ay == 500) {
-            if (mySprite.isHittingTile(CollisionDirection.Bottom)) {
-                animation.stopAnimation(animation.AnimationTypes.All, mySprite)
+        if (Cube.ay == 500) {
+            if (Cube.isHittingTile(CollisionDirection.Bottom)) {
+                animation.stopAnimation(animation.AnimationTypes.All, Cube)
             }
         } else {
-            if (mySprite.isHittingTile(CollisionDirection.Top)) {
-                animation.stopAnimation(animation.AnimationTypes.All, mySprite)
+            if (Cube.isHittingTile(CollisionDirection.Top)) {
+                animation.stopAnimation(animation.AnimationTypes.All, Cube)
             }
         }
     }
