@@ -16,7 +16,7 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile1`, function (sprite, l
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     if (EDITOR == 0) {
         animation.stopAnimation(animation.AnimationTypes.All, mySprite)
-        mySprite.setImage(assets.image`block`)
+        mySprite.setImage(assets.image`myImage`)
         controller.moveSprite(mySprite)
         mySprite.ay = 0
         mySprite.setVelocity(0, 0)
@@ -852,24 +852,21 @@ mySprite.vx = 90
 mySprite.ay = 500
 game.onUpdate(function () {
     Tiles = [
-    assets.image`block`,
-    assets.image`myImage0`,
-    assets.image`myImage9`,
-    assets.image`myImage10`,
-    assets.image`myImage11`,
-    assets.image`myImage1`,
     assets.image`myImage`,
-    assets.image`myImage5`,
-    assets.image`myImage4`,
-    assets.image`myImage7`,
-    assets.image`myImage27`,
-    assets.image`myImage8`,
-    assets.image`myImage26`,
-    assets.image`myImage6`,
-    assets.image`myImage2`,
+    assets.image`myImage0`,
+    assets.image`myImage11`,
+    assets.image`myImage12`,
     assets.image`myImage13`,
+    assets.image`myImage1`,
+    assets.image`myImage2`,
+    assets.image`myImage3`,
+    assets.image`myImage4`,
+    assets.image`myImage5`,
     assets.image`myImage14`,
+    assets.image`myImage6`,
     assets.image`myImage15`,
+    assets.image`myImage7`,
+    assets.image`myImage8`,
     assets.image`myImage16`,
     assets.image`myImage17`,
     assets.image`myImage18`,
@@ -877,12 +874,15 @@ game.onUpdate(function () {
     assets.image`myImage20`,
     assets.image`myImage21`,
     assets.image`myImage22`,
-    assets.image`myImage12`,
     assets.image`myImage23`,
     assets.image`myImage24`,
     assets.image`myImage25`,
+    assets.image`myImage29`,
+    assets.image`myImage26`,
+    assets.image`myImage27`,
     assets.image`myImage28`,
-    assets.image`myImage3`
+    assets.image`myImage9`,
+    assets.image`myImage10`
     ]
     BLOCK_LOCATION = tiles.getTilesByType(assets.tile`myTile0`)
     tileScanner.setWallAtLocations(BLOCK_LOCATION, true)
