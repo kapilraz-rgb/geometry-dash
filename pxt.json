@@ -9,7 +9,9 @@
         "controller": "*",
         "corgio": "*",
         "Color Fading": "github:jwunderl/pxt-color#v0.2.3",
-        "multiplayer": "*"
+        "multiplayer": "*",
+        "arcade-tile-scanner": "github:riknoll/arcade-tile-scanner#v0.0.1",
+        "settings-blocks": "github:microsoft/pxt-settings-blocks#v1.0.0"
     },
     "files": [
         "main.blocks",
@@ -23,7 +25,7 @@
         "test.ts"
     ],
     "targetVersions": {
-        "target": "4.1.17",
+        "target": "4.1.25",
         "targetId": "arcade"
     },
     "supportedTargets": [

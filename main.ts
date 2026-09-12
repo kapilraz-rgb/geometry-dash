@@ -8,357 +8,470 @@ namespace SpriteKind {
     export const checkpoint = SpriteKind.create()
 }
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile1`, function (sprite, location) {
-    music.stopAllSounds()
-    game.setGameOverPlayable(true, music.stringPlayable("C5 B A G C A B G ", 500), false)
-    game.setGameOverMessage(true, "LEVEL COMPLETE")
-    game.setGameOverEffect(true, effects.confetti)
-    game.gameOver(true)
+    if (EDITOR == 0) {
+        music.stopAllSounds()
+        game.gameOver(true)
+    }
+})
+controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (EDITOR == 0) {
+        animation.stopAnimation(animation.AnimationTypes.All, mySprite)
+        mySprite.setImage(img`
+            1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+            1 f f f f f f f f f f f f f f 1 
+            1 f f f f f f f f f f f f f f 1 
+            1 f f f f f f f f f f f f f f 1 
+            1 f f f f f f f f f f f f f f 1 
+            1 f f f f f f f f f f f f f f 1 
+            1 f f f f f f f f f f f f f f 1 
+            1 f f f f f f f f f f f f f f 1 
+            1 f f f f f f f f f f f f f f 1 
+            1 f f f f f f f f f f f f f f 1 
+            1 f f f f f f f f f f f f f f 1 
+            1 f f f f f f f f f f f f f f 1 
+            1 f f f f f f f f f f f f f f 1 
+            1 f f f f f f f f f f f f f f 1 
+            1 f f f f f f f f f f f f f f 1 
+            1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+            `)
+        controller.moveSprite(mySprite)
+        mySprite.ay = 0
+        mySprite.setVelocity(0, 0)
+        EDITOR = 1
+    }
+})
+controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (EDITOR == 0) {
+        sprites.destroy(Checkpoints)
+        Checkpoints = sprites.create(img`
+            . . . . 7 . . . . 
+            . . . . 7 . . . . 
+            . . . 7 7 7 . . . 
+            . . . 7 7 7 . . . 
+            . . 7 7 7 7 7 . . 
+            . . 7 7 7 7 7 . . 
+            . 7 7 7 7 7 7 7 . 
+            . 7 7 7 7 7 7 7 . 
+            7 7 7 7 7 7 7 7 7 
+            7 7 7 7 7 7 7 7 7 
+            . 7 7 7 7 7 7 7 . 
+            . 7 7 7 7 7 7 7 . 
+            . . 7 7 7 7 7 . . 
+            . . 7 7 7 7 7 . . 
+            . . . 7 7 7 . . . 
+            . . . 7 7 7 . . . 
+            . . . . 7 . . . . 
+            `, SpriteKind.checkpoint)
+        Checkpoints.setPosition(mySprite.x, mySprite.y)
+        Practice_mode = 6
+        music.stopAllSounds()
+        music.play(music.stringPlayable("C D C D C D C D ", 120), music.PlaybackMode.LoopingInBackground)
+        music.play(music.stringPlayable("D C F G B E A F ", 120), music.PlaybackMode.LoopingInBackground)
+        game.setGameOverMessage(true, "Complete Properly")
+        game.setGameOverEffect(true, effects.dissolve)
+        game.setGameOverPlayable(true, music.stringPlayable("G B A C G A B C5 ", 500), false)
+    }
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile`, function (sprite, location) {
-    music.stopAllSounds()
-    game.gameOver(false)
-    sprites.destroy(mySprite)
+    if (EDITOR == 0) {
+        if (Practice_mode == 0) {
+            music.stopAllSounds()
+            game.gameOver(false)
+            sprites.destroy(mySprite)
+        } else {
+            mySprite.setPosition(Checkpoints.x, Checkpoints.y)
+            game.splash("Retry")
+        }
+    }
 })
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
-    if (mySprite.ay == 500) {
-        if (mySprite.isHittingTile(CollisionDirection.Bottom)) {
-            mySprite.vy = -200
-            animation.runImageAnimation(
-            mySprite,
-            [img`
-                f f f f f f f f f f f f f f f f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f 5 f f f f 5 5 5 f f f f 5 5 f 
-                f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
-                f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
-                f 5 f 9 9 f 5 5 5 f f f f 5 5 f 
-                f 5 f 9 9 f 5 5 5 5 5 5 5 5 5 f 
-                f 5 f 9 9 f 5 5 5 5 5 5 5 5 5 f 
-                f 5 f 9 9 f 5 5 5 5 5 5 5 5 5 f 
-                f 5 f 9 9 f 5 5 5 f f f f 5 5 f 
-                f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
-                f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
-                f 5 f f f f 5 5 5 f f f f 5 5 f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f f f f f f f f f f f f f f f f 
-                `,img`
-                f f f f f f f f f f f f f f f f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f 5 5 f f f f f f f f f f f 5 f 
-                f 5 5 f 9 9 9 9 9 9 9 9 9 f 5 f 
-                f 5 5 f 9 9 9 9 9 9 9 9 9 f 5 f 
-                f 5 5 f f f f f f f f f f f 5 f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f 5 5 f f f f 5 5 5 f f f f 5 f 
-                f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
-                f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
-                f 5 5 f f f f 5 5 5 f f f f 5 f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f f f f f f f f f f f f f f f f 
-                `,img`
-                f f f f f f f f f f f f f f f f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f 5 5 f f f f 5 5 5 f f f f 5 f 
-                f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
-                f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
-                f 5 5 f f f f 5 5 5 f 9 9 f 5 f 
-                f 5 5 5 5 5 5 5 5 5 f 9 9 f 5 f 
-                f 5 5 5 5 5 5 5 5 5 f 9 9 f 5 f 
-                f 5 5 5 5 5 5 5 5 5 f 9 9 f 5 f 
-                f 5 5 f f f f 5 5 5 f 9 9 f 5 f 
-                f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
-                f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
-                f 5 5 f f f f 5 5 5 f f f f 5 f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f f f f f f f f f f f f f f f f 
-                `],
-            100,
-            true
-            )
-        }
-        if (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile8`)) {
-            mySprite.vy = -200
-            animation.runImageAnimation(
-            mySprite,
-            [img`
-                f f f f f f f f f f f f f f f f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f 5 f f f f 5 5 5 f f f f 5 5 f 
-                f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
-                f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
-                f 5 f 9 9 f 5 5 5 f f f f 5 5 f 
-                f 5 f 9 9 f 5 5 5 5 5 5 5 5 5 f 
-                f 5 f 9 9 f 5 5 5 5 5 5 5 5 5 f 
-                f 5 f 9 9 f 5 5 5 5 5 5 5 5 5 f 
-                f 5 f 9 9 f 5 5 5 f f f f 5 5 f 
-                f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
-                f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
-                f 5 f f f f 5 5 5 f f f f 5 5 f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f f f f f f f f f f f f f f f f 
-                `,img`
-                f f f f f f f f f f f f f f f f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f 5 5 f f f f f f f f f f f 5 f 
-                f 5 5 f 9 9 9 9 9 9 9 9 9 f 5 f 
-                f 5 5 f 9 9 9 9 9 9 9 9 9 f 5 f 
-                f 5 5 f f f f f f f f f f f 5 f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f 5 5 f f f f 5 5 5 f f f f 5 f 
-                f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
-                f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
-                f 5 5 f f f f 5 5 5 f f f f 5 f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f f f f f f f f f f f f f f f f 
-                `,img`
-                f f f f f f f f f f f f f f f f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f 5 5 f f f f 5 5 5 f f f f 5 f 
-                f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
-                f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
-                f 5 5 f f f f 5 5 5 f 9 9 f 5 f 
-                f 5 5 5 5 5 5 5 5 5 f 9 9 f 5 f 
-                f 5 5 5 5 5 5 5 5 5 f 9 9 f 5 f 
-                f 5 5 5 5 5 5 5 5 5 f 9 9 f 5 f 
-                f 5 5 f f f f 5 5 5 f 9 9 f 5 f 
-                f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
-                f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
-                f 5 5 f f f f 5 5 5 f f f f 5 f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f f f f f f f f f f f f f f f f 
-                `],
-            100,
-            true
-            )
-        }
-    } else {
-        if (mySprite.isHittingTile(CollisionDirection.Top)) {
-            mySprite.vy = 200
-            animation.runImageAnimation(
-            mySprite,
-            [img`
-                f f f f f f f f f f f f f f f f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f 5 f f f f 5 5 5 f f f f 5 5 f 
-                f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
-                f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
-                f 5 f 9 9 f 5 5 5 f f f f 5 5 f 
-                f 5 f 9 9 f 5 5 5 5 5 5 5 5 5 f 
-                f 5 f 9 9 f 5 5 5 5 5 5 5 5 5 f 
-                f 5 f 9 9 f 5 5 5 5 5 5 5 5 5 f 
-                f 5 f 9 9 f 5 5 5 f f f f 5 5 f 
-                f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
-                f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
-                f 5 f f f f 5 5 5 f f f f 5 5 f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f f f f f f f f f f f f f f f f 
-                `,img`
-                f f f f f f f f f f f f f f f f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f 5 5 f f f f f f f f f f f 5 f 
-                f 5 5 f 9 9 9 9 9 9 9 9 9 f 5 f 
-                f 5 5 f 9 9 9 9 9 9 9 9 9 f 5 f 
-                f 5 5 f f f f f f f f f f f 5 f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f 5 5 f f f f 5 5 5 f f f f 5 f 
-                f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
-                f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
-                f 5 5 f f f f 5 5 5 f f f f 5 f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f f f f f f f f f f f f f f f f 
-                `,img`
-                f f f f f f f f f f f f f f f f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f 5 5 f f f f 5 5 5 f f f f 5 f 
-                f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
-                f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
-                f 5 5 f f f f 5 5 5 f 9 9 f 5 f 
-                f 5 5 5 5 5 5 5 5 5 f 9 9 f 5 f 
-                f 5 5 5 5 5 5 5 5 5 f 9 9 f 5 f 
-                f 5 5 5 5 5 5 5 5 5 f 9 9 f 5 f 
-                f 5 5 f f f f 5 5 5 f 9 9 f 5 f 
-                f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
-                f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
-                f 5 5 f f f f 5 5 5 f f f f 5 f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f f f f f f f f f f f f f f f f 
-                `],
-            100,
-            true
-            )
-        }
-        if (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile8`)) {
-            mySprite.vy = 200
-            animation.runImageAnimation(
-            mySprite,
-            [img`
-                f f f f f f f f f f f f f f f f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f 5 f f f f 5 5 5 f f f f 5 5 f 
-                f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
-                f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
-                f 5 f 9 9 f 5 5 5 f f f f 5 5 f 
-                f 5 f 9 9 f 5 5 5 5 5 5 5 5 5 f 
-                f 5 f 9 9 f 5 5 5 5 5 5 5 5 5 f 
-                f 5 f 9 9 f 5 5 5 5 5 5 5 5 5 f 
-                f 5 f 9 9 f 5 5 5 f f f f 5 5 f 
-                f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
-                f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
-                f 5 f f f f 5 5 5 f f f f 5 5 f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f f f f f f f f f f f f f f f f 
-                `,img`
-                f f f f f f f f f f f f f f f f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f 5 5 f f f f f f f f f f f 5 f 
-                f 5 5 f 9 9 9 9 9 9 9 9 9 f 5 f 
-                f 5 5 f 9 9 9 9 9 9 9 9 9 f 5 f 
-                f 5 5 f f f f f f f f f f f 5 f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f 5 5 f f f f 5 5 5 f f f f 5 f 
-                f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
-                f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
-                f 5 5 f f f f 5 5 5 f f f f 5 f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f f f f f f f f f f f f f f f f 
-                `,img`
-                f f f f f f f f f f f f f f f f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f 5 5 f f f f 5 5 5 f f f f 5 f 
-                f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
-                f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
-                f 5 5 f f f f 5 5 5 f 9 9 f 5 f 
-                f 5 5 5 5 5 5 5 5 5 f 9 9 f 5 f 
-                f 5 5 5 5 5 5 5 5 5 f 9 9 f 5 f 
-                f 5 5 5 5 5 5 5 5 5 f 9 9 f 5 f 
-                f 5 5 f f f f 5 5 5 f 9 9 f 5 f 
-                f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
-                f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
-                f 5 5 f f f f 5 5 5 f f f f 5 f 
-                f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-                f f f f f f f f f f f f f f f f 
-                `],
-            100,
-            true
-            )
+    if (EDITOR == 0) {
+        if (mySprite.ay == 500) {
+            if (mySprite.isHittingTile(CollisionDirection.Bottom)) {
+                mySprite.vy = -200
+                animation.runImageAnimation(
+                mySprite,
+                [img`
+                    f f f f f f f f f f f f f f f f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f 5 f f f f 5 5 5 f f f f 5 5 f 
+                    f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
+                    f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
+                    f 5 f 9 9 f 5 5 5 f f f f 5 5 f 
+                    f 5 f 9 9 f 5 5 5 5 5 5 5 5 5 f 
+                    f 5 f 9 9 f 5 5 5 5 5 5 5 5 5 f 
+                    f 5 f 9 9 f 5 5 5 5 5 5 5 5 5 f 
+                    f 5 f 9 9 f 5 5 5 f f f f 5 5 f 
+                    f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
+                    f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
+                    f 5 f f f f 5 5 5 f f f f 5 5 f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f f f f f f f f f f f f f f f f 
+                    `,img`
+                    f f f f f f f f f f f f f f f f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f 5 5 f f f f f f f f f f f 5 f 
+                    f 5 5 f 9 9 9 9 9 9 9 9 9 f 5 f 
+                    f 5 5 f 9 9 9 9 9 9 9 9 9 f 5 f 
+                    f 5 5 f f f f f f f f f f f 5 f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f 5 5 f f f f 5 5 5 f f f f 5 f 
+                    f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
+                    f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
+                    f 5 5 f f f f 5 5 5 f f f f 5 f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f f f f f f f f f f f f f f f f 
+                    `,img`
+                    f f f f f f f f f f f f f f f f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f 5 5 f f f f 5 5 5 f f f f 5 f 
+                    f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
+                    f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
+                    f 5 5 f f f f 5 5 5 f 9 9 f 5 f 
+                    f 5 5 5 5 5 5 5 5 5 f 9 9 f 5 f 
+                    f 5 5 5 5 5 5 5 5 5 f 9 9 f 5 f 
+                    f 5 5 5 5 5 5 5 5 5 f 9 9 f 5 f 
+                    f 5 5 f f f f 5 5 5 f 9 9 f 5 f 
+                    f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
+                    f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
+                    f 5 5 f f f f 5 5 5 f f f f 5 f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f f f f f f f f f f f f f f f f 
+                    `],
+                200,
+                true
+                )
+            }
+            if (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile8`)) {
+                animation.runImageAnimation(
+                mySprite,
+                [img`
+                    f f f f f f f f f f f f f f f f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f 5 f f f f 5 5 5 f f f f 5 5 f 
+                    f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
+                    f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
+                    f 5 f 9 9 f 5 5 5 f f f f 5 5 f 
+                    f 5 f 9 9 f 5 5 5 5 5 5 5 5 5 f 
+                    f 5 f 9 9 f 5 5 5 5 5 5 5 5 5 f 
+                    f 5 f 9 9 f 5 5 5 5 5 5 5 5 5 f 
+                    f 5 f 9 9 f 5 5 5 f f f f 5 5 f 
+                    f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
+                    f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
+                    f 5 f f f f 5 5 5 f f f f 5 5 f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f f f f f f f f f f f f f f f f 
+                    `,img`
+                    f f f f f f f f f f f f f f f f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f 5 5 f f f f f f f f f f f 5 f 
+                    f 5 5 f 9 9 9 9 9 9 9 9 9 f 5 f 
+                    f 5 5 f 9 9 9 9 9 9 9 9 9 f 5 f 
+                    f 5 5 f f f f f f f f f f f 5 f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f 5 5 f f f f 5 5 5 f f f f 5 f 
+                    f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
+                    f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
+                    f 5 5 f f f f 5 5 5 f f f f 5 f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f f f f f f f f f f f f f f f f 
+                    `,img`
+                    f f f f f f f f f f f f f f f f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f 5 5 f f f f 5 5 5 f f f f 5 f 
+                    f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
+                    f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
+                    f 5 5 f f f f 5 5 5 f 9 9 f 5 f 
+                    f 5 5 5 5 5 5 5 5 5 f 9 9 f 5 f 
+                    f 5 5 5 5 5 5 5 5 5 f 9 9 f 5 f 
+                    f 5 5 5 5 5 5 5 5 5 f 9 9 f 5 f 
+                    f 5 5 f f f f 5 5 5 f 9 9 f 5 f 
+                    f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
+                    f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
+                    f 5 5 f f f f 5 5 5 f f f f 5 f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f f f f f f f f f f f f f f f f 
+                    `],
+                200,
+                true
+                )
+                mySprite.vy = -200
+            }
+        } else {
+            if (mySprite.isHittingTile(CollisionDirection.Top)) {
+                animation.runImageAnimation(
+                mySprite,
+                [img`
+                    f f f f f f f f f f f f f f f f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f 5 f f f f 5 5 5 f f f f 5 5 f 
+                    f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
+                    f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
+                    f 5 f 9 9 f 5 5 5 f f f f 5 5 f 
+                    f 5 f 9 9 f 5 5 5 5 5 5 5 5 5 f 
+                    f 5 f 9 9 f 5 5 5 5 5 5 5 5 5 f 
+                    f 5 f 9 9 f 5 5 5 5 5 5 5 5 5 f 
+                    f 5 f 9 9 f 5 5 5 f f f f 5 5 f 
+                    f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
+                    f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
+                    f 5 f f f f 5 5 5 f f f f 5 5 f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f f f f f f f f f f f f f f f f 
+                    `,img`
+                    f f f f f f f f f f f f f f f f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f 5 5 f f f f f f f f f f f 5 f 
+                    f 5 5 f 9 9 9 9 9 9 9 9 9 f 5 f 
+                    f 5 5 f 9 9 9 9 9 9 9 9 9 f 5 f 
+                    f 5 5 f f f f f f f f f f f 5 f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f 5 5 f f f f 5 5 5 f f f f 5 f 
+                    f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
+                    f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
+                    f 5 5 f f f f 5 5 5 f f f f 5 f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f f f f f f f f f f f f f f f f 
+                    `,img`
+                    f f f f f f f f f f f f f f f f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f 5 5 f f f f 5 5 5 f f f f 5 f 
+                    f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
+                    f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
+                    f 5 5 f f f f 5 5 5 f 9 9 f 5 f 
+                    f 5 5 5 5 5 5 5 5 5 f 9 9 f 5 f 
+                    f 5 5 5 5 5 5 5 5 5 f 9 9 f 5 f 
+                    f 5 5 5 5 5 5 5 5 5 f 9 9 f 5 f 
+                    f 5 5 f f f f 5 5 5 f 9 9 f 5 f 
+                    f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
+                    f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
+                    f 5 5 f f f f 5 5 5 f f f f 5 f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f f f f f f f f f f f f f f f f 
+                    `],
+                200,
+                true
+                )
+                mySprite.vy = 200
+            }
+            if (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile8`)) {
+                mySprite.vy = 200
+                animation.runImageAnimation(
+                mySprite,
+                [img`
+                    f f f f f f f f f f f f f f f f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f 5 f f f f 5 5 5 f f f f 5 5 f 
+                    f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
+                    f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
+                    f 5 f 9 9 f 5 5 5 f f f f 5 5 f 
+                    f 5 f 9 9 f 5 5 5 5 5 5 5 5 5 f 
+                    f 5 f 9 9 f 5 5 5 5 5 5 5 5 5 f 
+                    f 5 f 9 9 f 5 5 5 5 5 5 5 5 5 f 
+                    f 5 f 9 9 f 5 5 5 f f f f 5 5 f 
+                    f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
+                    f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
+                    f 5 f f f f 5 5 5 f f f f 5 5 f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f f f f f f f f f f f f f f f f 
+                    `,img`
+                    f f f f f f f f f f f f f f f f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f 5 5 f f f f f f f f f f f 5 f 
+                    f 5 5 f 9 9 9 9 9 9 9 9 9 f 5 f 
+                    f 5 5 f 9 9 9 9 9 9 9 9 9 f 5 f 
+                    f 5 5 f f f f f f f f f f f 5 f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f 5 5 f f f f 5 5 5 f f f f 5 f 
+                    f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
+                    f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
+                    f 5 5 f f f f 5 5 5 f f f f 5 f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f f f f f f f f f f f f f f f f 
+                    `,img`
+                    f f f f f f f f f f f f f f f f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f 5 5 f f f f 5 5 5 f f f f 5 f 
+                    f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
+                    f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
+                    f 5 5 f f f f 5 5 5 f 9 9 f 5 f 
+                    f 5 5 5 5 5 5 5 5 5 f 9 9 f 5 f 
+                    f 5 5 5 5 5 5 5 5 5 f 9 9 f 5 f 
+                    f 5 5 5 5 5 5 5 5 5 f 9 9 f 5 f 
+                    f 5 5 f f f f 5 5 5 f 9 9 f 5 f 
+                    f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
+                    f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
+                    f 5 5 f f f f 5 5 5 f f f f 5 f 
+                    f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+                    f f f f f f f f f f f f f f f f 
+                    `],
+                200,
+                true
+                )
+            }
         }
     }
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile7`, function (sprite, location) {
-    mySprite.ay = 500
+    if (EDITOR == 0) {
+        mySprite.ay = 500
+    }
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile9`, function (sprite, location) {
-    music.stopAllSounds()
-    game.gameOver(false)
-    sprites.destroy(mySprite)
+    if (EDITOR == 0) {
+        if (Practice_mode == 0) {
+            music.stopAllSounds()
+            game.gameOver(false)
+            sprites.destroy(mySprite)
+        } else {
+            mySprite.setPosition(Checkpoints.x, Checkpoints.y)
+            game.splash("Retry")
+        }
+    }
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile3`, function (sprite, location) {
-    mySprite.vy = -200
-    animation.runImageAnimation(
-    mySprite,
-    [img`
-        f f f f f f f f f f f f f f f f 
-        f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-        f 5 f f f f 5 5 5 f f f f 5 5 f 
-        f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
-        f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
-        f 5 f 9 9 f 5 5 5 f f f f 5 5 f 
-        f 5 f 9 9 f 5 5 5 5 5 5 5 5 5 f 
-        f 5 f 9 9 f 5 5 5 5 5 5 5 5 5 f 
-        f 5 f 9 9 f 5 5 5 5 5 5 5 5 5 f 
-        f 5 f 9 9 f 5 5 5 f f f f 5 5 f 
-        f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
-        f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
-        f 5 f f f f 5 5 5 f f f f 5 5 f 
-        f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-        f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-        f f f f f f f f f f f f f f f f 
-        `,img`
-        f f f f f f f f f f f f f f f f 
-        f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-        f 5 5 f f f f f f f f f f f 5 f 
-        f 5 5 f 9 9 9 9 9 9 9 9 9 f 5 f 
-        f 5 5 f 9 9 9 9 9 9 9 9 9 f 5 f 
-        f 5 5 f f f f f f f f f f f 5 f 
-        f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-        f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-        f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-        f 5 5 f f f f 5 5 5 f f f f 5 f 
-        f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
-        f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
-        f 5 5 f f f f 5 5 5 f f f f 5 f 
-        f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-        f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-        f f f f f f f f f f f f f f f f 
-        `,img`
-        f f f f f f f f f f f f f f f f 
-        f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-        f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-        f 5 5 f f f f 5 5 5 f f f f 5 f 
-        f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
-        f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
-        f 5 5 f f f f 5 5 5 f 9 9 f 5 f 
-        f 5 5 5 5 5 5 5 5 5 f 9 9 f 5 f 
-        f 5 5 5 5 5 5 5 5 5 f 9 9 f 5 f 
-        f 5 5 5 5 5 5 5 5 5 f 9 9 f 5 f 
-        f 5 5 f f f f 5 5 5 f 9 9 f 5 f 
-        f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
-        f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
-        f 5 5 f f f f 5 5 5 f f f f 5 f 
-        f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
-        f f f f f f f f f f f f f f f f 
-        `],
-    100,
-    true
-    )
+    if (EDITOR == 0) {
+        mySprite.vy = -200
+        animation.runImageAnimation(
+        mySprite,
+        [img`
+            f f f f f f f f f f f f f f f f 
+            f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+            f 5 f f f f 5 5 5 f f f f 5 5 f 
+            f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
+            f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
+            f 5 f 9 9 f 5 5 5 f f f f 5 5 f 
+            f 5 f 9 9 f 5 5 5 5 5 5 5 5 5 f 
+            f 5 f 9 9 f 5 5 5 5 5 5 5 5 5 f 
+            f 5 f 9 9 f 5 5 5 5 5 5 5 5 5 f 
+            f 5 f 9 9 f 5 5 5 f f f f 5 5 f 
+            f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
+            f 5 f 9 9 f 5 5 5 f 9 9 f 5 5 f 
+            f 5 f f f f 5 5 5 f f f f 5 5 f 
+            f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+            f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+            f f f f f f f f f f f f f f f f 
+            `,img`
+            f f f f f f f f f f f f f f f f 
+            f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+            f 5 5 f f f f f f f f f f f 5 f 
+            f 5 5 f 9 9 9 9 9 9 9 9 9 f 5 f 
+            f 5 5 f 9 9 9 9 9 9 9 9 9 f 5 f 
+            f 5 5 f f f f f f f f f f f 5 f 
+            f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+            f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+            f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+            f 5 5 f f f f 5 5 5 f f f f 5 f 
+            f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
+            f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
+            f 5 5 f f f f 5 5 5 f f f f 5 f 
+            f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+            f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+            f f f f f f f f f f f f f f f f 
+            `,img`
+            f f f f f f f f f f f f f f f f 
+            f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+            f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+            f 5 5 f f f f 5 5 5 f f f f 5 f 
+            f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
+            f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
+            f 5 5 f f f f 5 5 5 f 9 9 f 5 f 
+            f 5 5 5 5 5 5 5 5 5 f 9 9 f 5 f 
+            f 5 5 5 5 5 5 5 5 5 f 9 9 f 5 f 
+            f 5 5 5 5 5 5 5 5 5 f 9 9 f 5 f 
+            f 5 5 f f f f 5 5 5 f 9 9 f 5 f 
+            f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
+            f 5 5 f 9 9 f 5 5 5 f 9 9 f 5 f 
+            f 5 5 f f f f 5 5 5 f f f f 5 f 
+            f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+            f f f f f f f f f f f f f f f f 
+            `],
+        100,
+        true
+        )
+    }
 })
 controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
-    game.splash("Geometry Dash", "Made by Yug Raizada")
-    game.splash("Open up the code for Level Editor")
+    if (EDITOR == 0) {
+        game.splash("Geometry Dash", "Made by Yug Raizada")
+        game.splash("Press Up for Level Editor")
+    }
 })
 controller.menu.onEvent(ControllerButtonEvent.Pressed, function () {
-    game.splash("PAUSED")
+    if (EDITOR == 0) {
+        game.splash("PAUSED")
+    }
+    EDITOR = 1
+    mySprite.setVelocity(0, 0)
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile10`, function (sprite, location) {
-    music.stopAllSounds()
-    game.gameOver(false)
-    sprites.destroy(mySprite)
+    if (EDITOR == 0) {
+        if (Practice_mode == 0) {
+            music.stopAllSounds()
+            game.gameOver(false)
+            sprites.destroy(mySprite)
+        } else {
+            mySprite.setPosition(Checkpoints.x, Checkpoints.y)
+            game.splash("Retry")
+        }
+    }
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile27`, function (sprite, location) {
-    mySprite.ay = -500
+    if (EDITOR == 0) {
+        mySprite.ay = -500
+    }
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`Yellow Portal0`, function (sprite, location) {
-    mySprite.ay = 500
+    if (EDITOR == 0) {
+        mySprite.ay = 500
+    }
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`Yellow Portal`, function (sprite, location) {
-    mySprite.ay = -500
+    if (EDITOR == 0) {
+        mySprite.ay = -500
+    }
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile26`, function (sprite, location) {
-    music.stopAllSounds()
-    game.gameOver(false)
-    sprites.destroy(mySprite)
+    if (EDITOR == 0) {
+        if (Practice_mode == 0) {
+            music.stopAllSounds()
+            game.gameOver(false)
+            sprites.destroy(mySprite)
+        } else {
+            mySprite.setPosition(Checkpoints.x, Checkpoints.y)
+            game.splash("Retry")
+        }
+    }
 })
+let BLOCK_LOCATION: tiles.Location[] = []
+let Checkpoints: Sprite = null
+let EDITOR = 0
 let mySprite: Sprite = null
+let Practice_mode = 0
+let myTilemap = 0
+game.setGameOverPlayable(true, music.stringPlayable("C5 B A G C A B G ", 500), false)
+game.setGameOverMessage(true, "LEVEL COMPLETE")
+game.setGameOverEffect(true, effects.confetti)
+Practice_mode = 0
 scene.setBackgroundImage(img`
     8888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888
     8888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888
@@ -506,33 +619,52 @@ music.play(music.stringPlayable("C D E D C D E D ", 120), music.PlaybackMode.Loo
 game.setGameOverEffect(false, effects.dissolve)
 game.setGameOverMessage(false, "YOU DIED")
 game.setGameOverPlayable(false, music.stringPlayable("C5 A B G A F G E ", 407), false)
-mySprite.ay = 500
+tiles.setWallAt(tiles.getTileLocation(0, 0), true)
+game.onUpdate(function () {
+    if (EDITOR == 0) {
+        mySprite.vx = 90
+        mySprite.ay = 500
+    }
+})
 game.onUpdate(function () {
     scene.centerCameraAt(mySprite.x + 40, mySprite.y)
 })
-forever(function () {
-    if (mySprite.isHittingTile(CollisionDirection.Right)) {
-        music.stopAllSounds()
-        game.gameOver(false)
-        sprites.destroy(mySprite)
-    }
-    if (mySprite.isHittingTile(CollisionDirection.Top)) {
-        if (mySprite.ay == 500) {
-            music.stopAllSounds()
-            game.gameOver(false)
-            sprites.destroy(mySprite)
-        }
-    }
-    if (mySprite.ay == 500) {
-        if (mySprite.isHittingTile(CollisionDirection.Bottom)) {
-            animation.stopAnimation(animation.AnimationTypes.All, mySprite)
-        }
-    } else {
-        if (mySprite.isHittingTile(CollisionDirection.Top)) {
-            animation.stopAnimation(animation.AnimationTypes.All, mySprite)
-        }
-    }
+game.onUpdate(function () {
+    BLOCK_LOCATION = tiles.getTilesByType(assets.tile`myTile0`)
+    tileScanner.setWallAtLocations(BLOCK_LOCATION, true)
 })
-game.onUpdateInterval(500, function () {
-    mySprite.vx = 90
+forever(function () {
+    if (EDITOR == 0) {
+        if (mySprite.isHittingTile(CollisionDirection.Right)) {
+            if (Practice_mode == 0) {
+                music.stopAllSounds()
+                game.gameOver(false)
+                sprites.destroy(mySprite)
+            } else {
+                mySprite.setPosition(Checkpoints.x, Checkpoints.y)
+                game.splash("Retry")
+            }
+        }
+        if (mySprite.isHittingTile(CollisionDirection.Top)) {
+            if (mySprite.ay == 500) {
+                if (Practice_mode == 0) {
+                    music.stopAllSounds()
+                    game.gameOver(false)
+                    sprites.destroy(mySprite)
+                } else {
+                    mySprite.setPosition(Checkpoints.x, Checkpoints.y)
+                    game.splash("Retry")
+                }
+            }
+        }
+        if (mySprite.ay == 500) {
+            if (mySprite.isHittingTile(CollisionDirection.Bottom)) {
+                animation.stopAnimation(animation.AnimationTypes.All, mySprite)
+            }
+        } else {
+            if (mySprite.isHittingTile(CollisionDirection.Top)) {
+                animation.stopAnimation(animation.AnimationTypes.All, mySprite)
+            }
+        }
+    }
 })
