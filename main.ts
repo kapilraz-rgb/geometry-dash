@@ -644,6 +644,8 @@ function start_saved () {
     game.setGameOverEffect(false, effects.dissolve)
     game.setGameOverMessage(false, "YOU DIED")
     game.setGameOverPlayable(false, music.stringPlayable("C5 A B G A F G E ", 407), false)
+    mySprite.vx = 90
+    mySprite.ay = 500
 }
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile10`, function (sprite, location) {
     if (EDITOR == 0) {
@@ -689,10 +691,11 @@ let location: tiles.Location = null
 let Tiles: Image[] = []
 let TILE_VAL = 0
 let Checkpoints: Sprite = null
-let EDITOR = 0
 let mySprite: Sprite = null
 let Practice_mode = 0
 let myTilemap = 0
+let EDITOR = 0
+EDITOR = 0
 myTilemap = 0
 game.setGameOverPlayable(true, music.stringPlayable("C5 B A G C A B G ", 500), false)
 game.setGameOverMessage(true, "LEVEL COMPLETE")
@@ -845,7 +848,8 @@ music.play(music.stringPlayable("C D E D C D E D ", 120), music.PlaybackMode.Loo
 game.setGameOverEffect(false, effects.dissolve)
 game.setGameOverMessage(false, "YOU DIED")
 game.setGameOverPlayable(false, music.stringPlayable("C5 A B G A F G E ", 407), false)
-tiles.setWallAt(tiles.getTileLocation(0, 0), true)
+mySprite.vx = 90
+mySprite.ay = 500
 game.onUpdate(function () {
     Tiles = [
     assets.image`block`,
@@ -885,17 +889,13 @@ game.onUpdate(function () {
 })
 game.onUpdate(function () {
     if (EDITOR == 0) {
-        mySprite.vx = 90
-        mySprite.ay = 500
-    }
-})
-game.onUpdate(function () {
-    if (EDITOR == 0) {
         scene.centerCameraAt(mySprite.x + 40, mySprite.y)
     }
 })
 game.onUpdate(function () {
-    location = mySprite.tilemapLocation()
+    if (EDITOR == 1) {
+        location = mySprite.tilemapLocation()
+    }
 })
 forever(function () {
     if (EDITOR == 0) {
