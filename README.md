@@ -1,6 +1,5 @@
 GD in Makecode Arcade 
-Look at its version, It's 2.2.
-That's how you know it is Legit
+
 
 
 
