@@ -1,4 +1,4 @@
-// meta={"simUrl":"https://trg-arcade.userpxt.io/v4.1.25/---simulator","cdnUrl":"https://cdn.makecode.com","version":"2.1.0","target":"arcade","targetVersion":"4.1.25","repo":"kapilraz-rgb/geometry-dash"}
+// meta={"simUrl":"https://trg-arcade.userpxt.io/v4.1.25/---simulator","cdnUrl":"https://cdn.makecode.com","version":"2.2.0","target":"arcade","targetVersion":"4.1.25","repo":"kapilraz-rgb/geometry-dash"}
 // total=2817184 new=6.40% cached=71.07% other=22.53%
 (function (ectx) {
 'use strict';
@@ -784,7 +784,7 @@ const pxsim_pxtrt = pxsim.pxtrt;
 const pxsim_numops = pxsim.numops;
 
 
-function _main___P184634(s) {
+function _main___P184771(s) {
 let r0 = s.r0, step = s.pc;
 s.pc = -1;
 
@@ -1833,13 +1833,13 @@ switch (step) {
     return leave(s, r0)
   default: oops()
 } } }
-_main___P184634.info = {"start":0,"length":0,"line":0,"column":0,"endLine":0,"endColumn":0,"fileName":"pxt_modules/arcade-tile-scanner/main.ts","functionName":"<main>","argumentNames":[]}
-_main___P184634.continuations = [ 53,54,55,56 ]
+_main___P184771.info = {"start":0,"length":0,"line":0,"column":0,"endLine":0,"endColumn":0,"fileName":"pxt_modules/arcade-tile-scanner/main.ts","functionName":"<main>","argumentNames":[]}
+_main___P184771.continuations = [ 53,54,55,56 ]
 
-function _main___P184634_mk(s) {
+function _main___P184771_mk(s) {
     checkStack(s.depth);
     return {
-        parent: s, fn: _main___P184634, depth: s.depth + 1,
+        parent: s, fn: _main___P184771, depth: s.depth + 1,
         pc: 0, retval: undefined, r0: undefined, overwrittenPC: false, lambdaArgs: null,
   tmp_0: undefined,
   tmp_1: undefined,
@@ -77654,5 +77654,5 @@ const sprites_BaseSpriteSayRenderer__C53011_VT = mkVTable({
 
 const breakpoints = setupDebugger(1, ["transparency16___108446","tile2___108456","tile1___108451","tile5___108461","tile7___108471","tile10___108481","tile3___108556","tile6___108466","tile12___108566","tile15___108501","tile24___108541","tile11___108561","tile28___108571","tile14___108496","tile8___108476","tile4___108486","tile13___108491","tile16___108506","tile17___108511","tile18___108516","tile19___108521","tile20___108526","tile21___108531","tile22___108536","tile25___108546","tile26___108551","tile9___108576","tile29___108581","tile30___108586","tile31___108591","transparency8___108596","p2___184032","checkpoint___183086","Wall___184033","EDITOR___184041","Cube___184039","Checkpoints___184037","Practice_mode___184040","TILE_VAL___184036","Tiles___184035","SavedLv___184034","BLOCK_LOCATION___184038"])
 
-return _main___P184634
+return _main___P184771
 })
